@@ -41,7 +41,10 @@ export default function AlertPage() {
       </div>
       <div className="grid gap-4">
         {alerts.map((report) => (
-          <article key={report.id}>
+          <article
+            key={report.id}
+            aria-label={`${PRIORITY_LABELS[report.priority]} priority: ${report.title}`}
+          >
             <Card
               className={
                 report.priority === "critical"

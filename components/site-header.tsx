@@ -37,21 +37,26 @@ function isActivePath(pathname: string, href: string) {
 
 export function SiteHeader() {
   const pathname = usePathname()
-  const [theme, setTheme] = useState<"light" | "dark">("light")
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    // Lazy initializer: read theme synchronously so the initial render
+    // matches what the inline script already applied to <html>. This
+    // avoids the cascading-render anti-pattern of calling setState
+    // inside a useEffect body (react-hooks/set-state-in-effect).
+    if (typeof window === "undefined") return "light"
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY)
+    if (stored === "light" || stored === "dark") return stored
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light"
+  })
   const [menuOpen, setMenuOpen] = useState(false)
   const [logoutOpen, setLogoutOpen] = useState(false)
 
+  // Keep <html> class in sync after hydration (the inline script already
+  // applied it server-side; this effect only runs when theme changes).
   useEffect(() => {
-    const stored = window.localStorage.getItem(THEME_STORAGE_KEY)
-    const next =
-      stored === "light" || stored === "dark"
-        ? stored
-        : window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-    setTheme(next)
-    document.documentElement.classList.toggle("dark", next === "dark")
-  }, [])
+    document.documentElement.classList.toggle("dark", theme === "dark")
+  }, [theme])
 
   function toggleTheme() {
     const next = theme === "dark" ? "light" : "dark"

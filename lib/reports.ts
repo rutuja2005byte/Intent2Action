@@ -96,9 +96,11 @@ export const INITIAL_REPORTS: Report[] = [
 export const THEME_STORAGE_KEY = "intent2action-theme"
 
 export function formatDate(value: string) {
+  const d = new Date(value)
+  if (isNaN(d.getTime())) return "Unknown date"
   return new Intl.DateTimeFormat(undefined, {
     dateStyle: "medium",
-  }).format(new Date(value))
+  }).format(d)
 }
 
 export function formatBytes(bytes: number) {

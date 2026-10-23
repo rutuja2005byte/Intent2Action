@@ -112,18 +112,21 @@ export function HomeAuthForms() {
               />
             </div>
             <Button type="submit">Sign In</Button>
-            {signInNotice ? (
-              <p
-                className={
-                  signInNotice.tone === "error"
+            {/* Always-present live region: screen readers announce changes
+                even when the element first mounts with content. */}
+            <p
+              className={
+                signInNotice
+                  ? signInNotice.tone === "error"
                     ? "text-sm text-destructive"
                     : "text-sm text-muted-foreground"
-                }
-                aria-live="polite"
-              >
-                {signInNotice.text}
-              </p>
-            ) : null}
+                  : "sr-only"
+              }
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {signInNotice?.text ?? ""}
+            </p>
           </form>
         </CardContent>
       </Card>
@@ -180,18 +183,19 @@ export function HomeAuthForms() {
               />
             </div>
             <Button type="submit">Sign Up</Button>
-            {signUpNotice ? (
-              <p
-                className={
-                  signUpNotice.tone === "error"
+            <p
+              className={
+                signUpNotice
+                  ? signUpNotice.tone === "error"
                     ? "text-sm text-destructive"
                     : "text-sm text-muted-foreground"
-                }
-                aria-live="polite"
-              >
-                {signUpNotice.text}
-              </p>
-            ) : null}
+                  : "sr-only"
+              }
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {signUpNotice?.text ?? ""}
+            </p>
           </form>
         </CardContent>
       </Card>

@@ -43,6 +43,7 @@ function kindForFile(file: File): FileKind {
 
 export function UploadForm() {
   const formId = useId()
+  const fileHintId = `${formId}-file-hint`
   const [error, setError] = useState("")
   const [preview, setPreview] = useState<Preview | null>(null)
 
@@ -138,9 +139,10 @@ export function UploadForm() {
                 type="file"
                 multiple
                 accept={ACCEPT}
+                aria-describedby={fileHintId}
                 className="block w-full text-sm file:mr-3 file:border file:border-input file:bg-background file:px-3 file:py-1.5 file:text-sm"
               />
-              <p className="text-xs text-muted-foreground">
+              <p id={fileHintId} className="text-xs text-muted-foreground">
                 Up to {MAX_FILES} files, {formatBytes(MAX_FILE_BYTES)} each.
                 Audio, images, video, PDF, and common documents.
               </p>
@@ -148,11 +150,15 @@ export function UploadForm() {
             <div className="flex justify-end">
               <Button type="submit">Preview report</Button>
             </div>
-            {error ? (
-              <p className="text-sm text-destructive" aria-live="polite">
-                {error}
-              </p>
-            ) : null}
+            {/* Always render the live region so screen readers catch
+                announcements even when the element first mounts. */}
+            <p
+              className={error ? "text-sm text-destructive" : "sr-only"}
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {error}
+            </p>
           </form>
         </CardContent>
       </Card>
@@ -199,9 +205,9 @@ export function UploadForm() {
 
             {preview.files.length > 0 ? (
               <ul className="mt-4 divide-y border-t text-sm">
-                {preview.files.map((file) => (
+                {preview.files.map((file, index) => (
                   <li
-                    key={`${file.name}-${file.size}`}
+                    key={`${file.name}-${file.size}-${index}`}
                     className="flex flex-wrap items-baseline justify-between gap-2 py-2"
                   >
                     <span className="font-medium">{file.name}</span>
