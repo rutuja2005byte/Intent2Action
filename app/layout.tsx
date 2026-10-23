@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     template: "%s · Intent2Action",
   },
   description:
-    "Upload civic reports, review urgent alerts, and track status on separate pages.",
+    "Intent2Action: Converting unstructured real-world citizen inputs into structured, verified, life-saving actions powered by Gemini AI.",
 }
 
 const themeScript = `(function(){try{var k=${JSON.stringify(THEME_STORAGE_KEY)};var t=localStorage.getItem(k);if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.classList.toggle("dark",t==="dark")}catch(e){}})();`
